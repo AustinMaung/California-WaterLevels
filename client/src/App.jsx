@@ -1,19 +1,39 @@
 import { useState, useEffect } from 'react'
+import { postRequest, getRequest } from './AJAX.js'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
 
+/* Temporary component to see if post requests to server works: DELETE LATER */
+function TestButton() {
+  const [water_data, setData] = useState([]) //water data: data returned by CDEC api
+
+  async function fetchData() {
+    const api_call = new URL("http://localhost:3000/water-level") //path to server: CHANGE MUCH LATER
+    const year_month_locations = {
+      year: 2022,
+      month: 11,
+      locations: ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
+    }
+    let data = await postRequest(api_call, year_month_locations)
+    console.log(data)
+    setData(data)
+  }
+
+  return (
+    <div>
+      <h1>{JSON.stringify(water_data.map(x => x.stationId+ ": " + x.value.toString()))}</h1>
+      <button onClick={fetchData}>Test</button>
+    </div> 
+  )
+}
+
 function App() {
-  const [count, setCount] = useState(0)
-  // "https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations=SHA,ORO,CLE,NML,SNL,DNP,BER&SensorNums=15&dur_code=M&Start=2022-01-01&End=2022-01-01"
-  
   /* testing API call to CDEC Water API through server on loadup */
   useEffect(() => {
-    //
     async function fetchData() {
-      const test = new URL("http://localhost:3000/test") //path to server
-      const res = await fetch(test)
-      const text = await res.json()
-      console.log(text)
+      const url = new URL("http://localhost:3000/test") //path to server
+      const data = await getRequest(url)
+      console.log(data)
     }
     fetchData()
   }, [])
@@ -21,6 +41,7 @@ function App() {
   return (
     <div className="App">
       <h1>test2</h1>
+      <TestButton />
     </div>
   )
 }
