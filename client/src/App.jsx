@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { postRequest, getRequest } from './AJAX.js'
+import { Chart } from './Chart.jsx'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
 
@@ -41,6 +42,7 @@ function App() {
   return (
     <div className="App">
       <h1>test2</h1>
+      <Chart />
       <TestButton />
     </div>
   )
