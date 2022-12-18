@@ -24,6 +24,7 @@ app.post('/water-level', (req, res) => {
     const month = req.body.month
     const locations = req.body.locations.join()
     const api_call = `https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations=${locations}&SensorNums=15&dur_code=M&Start=${year}-${month}&End=${year}-${month}`
+    console.log(api_call)
     fetch(api_call)
     .then((api_req) => api_req.json())
     .then((result) => res.send(result))

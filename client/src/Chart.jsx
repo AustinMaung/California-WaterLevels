@@ -19,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-export function Chart() {
+export function Chart(props) {
     const options = {
         responsive: true,
         plugins: {
@@ -28,19 +28,19 @@ export function Chart() {
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Water Levels of California Counties',
           },
         },
       };
       
-      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+      const labels = props.locations;
 
     const data = {
         labels,
         datasets: [
           {
             label: 'Dataset 1',
-            data: [10, 20, 30, 40, 50, 60, 70],
+            data: props.data,
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           }
         ],

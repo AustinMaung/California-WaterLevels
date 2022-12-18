@@ -4,10 +4,13 @@ import { Chart } from './Chart.jsx'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
 
-/* Temporary component to see if post requests to server works: DELETE LATER */
-function TestButton() {
-  const [water_data, setData] = useState([]) //water data: data returned by CDEC api
-
+/**
+ * Temporary component to see if post requests to server works: DELETE LATER
+ * @param {object} water_data data from CDEC Water API
+ * @param {Function} setData useState function that updates propogated state, water_data
+ */
+function TestButton( {water_data, setData} ) {
+  // const [water_data, setData] = useState([]) //water data: data returned by CDEC api
   async function fetchData() {
     const api_call = new URL("http://localhost:3000/water-level") //path to server: CHANGE MUCH LATER
     const year_month_locations = {
@@ -22,13 +25,17 @@ function TestButton() {
 
   return (
     <div>
-      <h1>{JSON.stringify(water_data.map(x => x.stationId+ ": " + x.value.toString()))}</h1>
+      {/* <h1>{JSON.stringify(water_data.map(x => x.stationId+ ": " + x.value.toString()))}</h1> */}
       <button onClick={fetchData}>Test</button>
     </div> 
   )
 }
 
 function App() {
+  const [water_data, setData] = useState([])
+  const locations = water_data.map(x => x.stationId)
+  const values = water_data.map(x => x.value)
+
   /* testing API call to CDEC Water API through server on loadup */
   useEffect(() => {
     async function fetchData() {
@@ -41,9 +48,14 @@ function App() {
 
   return (
     <div className="App">
-      <h1>test2</h1>
-      <Chart />
-      <TestButton />
+      {/* <h1>test1 {JSON.stringify(water_data.map(x => x.stationId+ ": " + x.value.toString()))} </h1> */}
+      <h1>{JSON.stringify(locations)}</h1>
+      <h1>{JSON.stringify(values)}</h1>
+      <Chart 
+        locations={locations}
+        data={values}
+      />
+      <TestButton water_data={water_data} setData={setData}/>
     </div>
   )
 }
