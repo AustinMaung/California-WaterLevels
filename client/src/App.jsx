@@ -12,7 +12,7 @@ import { Chart } from './Chart.jsx'
 function TestButton( {water_data, setData} ) {
   // const [water_data, setData] = useState([]) //water data: data returned by CDEC api
   async function fetchData() {
-    const api_call = new URL("http://localhost:3000/water-level") //path to server: CHANGE MUCH LATER
+    const api_call = new URL("http://localhost:3000/water-level-single") //path to server: CHANGE MUCH LATER
     const year_month_locations = {
       year: 2022,
       month: 11,
