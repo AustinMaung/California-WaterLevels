@@ -42,6 +42,11 @@ export function Chart(props) {
             label: 'Dataset 1',
             data: props.data,
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          },
+          {
+            label: 'Dataset 2',
+            data: [10000, 20000, 30000, 40000, 50000, 60000, 70000],
+            backgroundColor: 'rgba(99, 99, 255, 0.5)'
           }
         ],
       };

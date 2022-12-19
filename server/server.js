@@ -19,7 +19,7 @@ app.get('/test', (req, res) => {
 })
 
 /* Gets data from Water API given a year and month */
-app.post('/water-level', (req, res) => {
+app.post('/water-level-single', (req, res) => {
     const year = req.body.year
     const month = req.body.month
     const locations = req.body.locations.join()
@@ -28,6 +28,20 @@ app.post('/water-level', (req, res) => {
     fetch(api_call)
     .then((api_req) => api_req.json())
     .then((result) => res.send(result))
+    .catch((err) => console.log(err))
+})
+
+app.post('/water-level-multiple', (req, res) => {
+    const start_year = req.body.start_year
+    const end_year = req.body.end_year
+    const month = req.body.month
+    const locations = req.body.locations.join()
+    const api_call = `https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations=${locations}&SensorNums=15&dur_code=M&Start=${start_year}-1&End=${end_year}-1`
+    console.log(api_call)
+    fetch(api_call)
+    .then((api_req) => api_req.json())
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err))
 })
 
 app.listen(3000, () => console.log("Listening on Port 3000"))
