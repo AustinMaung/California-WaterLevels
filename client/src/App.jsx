@@ -4,58 +4,44 @@ import { Chart } from './Chart.jsx'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
 
-/**
- * Temporary component to see if post requests to server works: DELETE LATER
- * @param {object} water_data data from CDEC Water API
- * @param {Function} setData useState function that updates propogated state, water_data
- */
-function TestButton( {water_data, setData} ) {
-  // const [water_data, setData] = useState([]) //water data: data returned by CDEC api
-  async function fetchData() {
-    const api_call = new URL("http://localhost:3000/water-level-single") //path to server: CHANGE MUCH LATER
-    const year_month_locations = {
-      year: 2022,
-      month: 11,
-      locations: ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
-    }
-    let data = await postRequest(api_call, year_month_locations)
-    console.log(data)
-    setData(data)
-  }
-
-  return (
-    <div>
-      {/* <h1>{JSON.stringify(water_data.map(x => x.stationId+ ": " + x.value.toString()))}</h1> */}
-      <button onClick={fetchData}>Test</button>
-    </div> 
-  )
-}
+const DECADE = 10
+const STARTYEAR = 1980
+const NUMOFREQUESTS = 5
 
 function App() {
-  const [water_data, setData] = useState([])
-  const locations = water_data.map(x => x.stationId)
-  const values = water_data.map(x => x.value)
+  const [datasets, setList] = useState([])
 
-  /* testing API call to CDEC Water API through server on loadup */
+  /* Gather data for every 10 years since 1970 */
   useEffect(() => {
-    async function fetchData() {
-      const url = new URL("http://localhost:3000/test") //path to server
-      const data = await getRequest(url)
-      console.log(data)
+    async function callFetchRequests() {
+      const store_datasets = []
+      /* Make multiple post requests to get sets of data from CDEC API for each decade */
+      const api_call = new URL("http://localhost:3000/water-level-single")
+      for(let i = 0; i < NUMOFREQUESTS; i++) {
+        const year_month_locations = {
+          year: STARTYEAR + (i * DECADE),
+          month: 11,
+          locations: ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
+        }
+        const data = postRequest(api_call, year_month_locations)
+        .catch(() => console.log("error"))
+        store_datasets.push(data)
+      }
+      /* Wait till all the async calls finish before returning stored datas */
+      return await Promise.all(store_datasets)
     }
-    fetchData()
+    callFetchRequests()
+    .then((array_of_datasets)=>{
+      /* update state */
+      setList(array_of_datasets)
+      console.log(array_of_datasets)
+      // console.log(test)
+    })
   }, [])
 
   return (
     <div className="App">
-      {/* <h1>test1 {JSON.stringify(water_data.map(x => x.stationId+ ": " + x.value.toString()))} </h1> */}
-      <h1>{JSON.stringify(locations)}</h1>
-      <h1>{JSON.stringify(values)}</h1>
-      <Chart 
-        locations={locations}
-        data={values}
-      />
-      <TestButton water_data={water_data} setData={setData}/>
+      <Chart water_dataset={datasets}/>
     </div>
   )
 }
