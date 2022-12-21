@@ -20,8 +20,6 @@ ChartJS.register(
 );
 
 /* 
-TODO: Dectect if location is missing, then for that location put in a 0 
--store total list of locations then compare
 2. api calls just dies after a while
 */
 
@@ -59,8 +57,8 @@ export function Chart(props) {
   };
     
   const labels = (props.water_dataset.length > 0) ? props.water_dataset[1].map((water_data_of_location) => water_data_of_location.stationId) : []
-  console.log(labels)
-  console.log(arrary_of_data)
+  // console.log(labels)
+  // console.log(arrary_of_data)
   const data = {
       labels,
       datasets: arrary_of_data,

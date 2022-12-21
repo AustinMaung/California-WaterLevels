@@ -5,8 +5,8 @@ import { Chart } from './Chart.jsx'
 // import './App.css'
 
 const DECADE = 10
-const STARTYEAR = 1980
-const NUMOFREQUESTS = 5
+const STARTYEAR = 1970
+const NUMOFREQUESTS = 6
 
 function App() {
   const [datasets, setList] = useState([])
@@ -32,10 +32,28 @@ function App() {
     }
     callFetchRequests()
     .then((array_of_datasets)=>{
+      const store_array = array_of_datasets
+      const locations = ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
+      /* Go through each dataset of decades, check if theres a missing month for a decade,
+         then insert dummy data for that month
+      */
+      store_array.forEach(water_datas_of_year => {
+        water_datas_of_year.map((water_data_of_location, index) => {
+          /* If theres a missmatch, then a month is missing, insert dummy data */
+          if(water_data_of_location.stationId != locations[index]) {  
+            const missing_location = {
+              /* date: assumes theres another month in the dataset */
+              date: water_datas_of_year[water_datas_of_year.length - 1].date.slice(0, 4),
+              stationId: locations[index],
+              value: 0
+            }
+            water_datas_of_year.splice(index, 0, missing_location)
+          }
+        })
+      });
       /* update state */
       setList(array_of_datasets)
-      console.log(array_of_datasets)
-      // console.log(test)
+      // console.log(array_of_datasets)
     })
   }, [])
 
