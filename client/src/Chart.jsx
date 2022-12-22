@@ -56,7 +56,7 @@ export function Chart(props) {
     },
   };
     
-  const labels = (props.water_dataset.length > 0) ? props.water_dataset[1].map((water_data_of_location) => water_data_of_location.stationId) : []
+  const labels = (props.water_dataset.length > 0) ? props.water_dataset[0].map((water_data_of_location) => water_data_of_location.stationId) : []
   // console.log(labels)
   // console.log(arrary_of_data)
   const data = {
