@@ -40,7 +40,7 @@ export function Chart(props) {
       }
     })
   }
-  const arrary_of_data = formDataset()
+  const array_of_data = formDataset()
 
   const options = {
     responsive: true,
@@ -57,11 +57,9 @@ export function Chart(props) {
   };
     
   const labels = (props.water_dataset.length > 0) ? props.water_dataset[0].map((water_data_of_location) => water_data_of_location.stationId) : []
-  // console.log(labels)
-  // console.log(arrary_of_data)
   const data = {
       labels,
-      datasets: arrary_of_data,
+      datasets: array_of_data,
     };
 
   return <Bar options={options} data={data} />;

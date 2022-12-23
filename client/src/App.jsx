@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { postRequest, getRequest } from './AJAX.js'
 import { Chart } from './Chart.jsx'
+import { EveryFiveYearButton, EveryDecadeButton } from './YearButtons.jsx'
+import { MonthPicker } from './MonthPicker.jsx'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
 
@@ -17,7 +19,6 @@ function App() {
 
   const [array_of_observables, setObservables] = useState([])
   
-
    /* Gathers datasets based on a starting year and how many years to increment for */
    useEffect(() => {
     async function callFetchRequests() {
@@ -41,39 +42,42 @@ function App() {
     .then((array_of_datasets)=>{
       const store_array = array_of_datasets
       const locations = ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
-      /* Go through each dataset of decades, check if theres a missing month for a decade,
-         then insert dummy data for that month
+      /* Go through each dataset, check if missing month or if incorrect value, then
+         push in dummy data or replace month with data
       */
       store_array.forEach(water_datas_of_year => {
-        water_datas_of_year.map((water_data_of_location, index) => {
-          /* If theres a missmatch, then a month is missing, insert dummy data */
-          if(water_data_of_location.stationId != locations[index]) {  
-            const missing_location = {
-              /* date: assumes theres another month in the dataset */
-              date: water_datas_of_year[water_datas_of_year.length - 1].date.slice(0, 4),
-              stationId: locations[index],
-              value: 0
-            }
-            water_datas_of_year.splice(index, 0, missing_location)
+        locations.forEach((loc, index) => {
+          /* gets current data for specfic location, may be missing, which is why mod is used */
+          const water_data_of_location = water_datas_of_year[index % water_datas_of_year.length]
+          const dummy_data = {
+            /* date: assumes theres another month in the dataset */
+            date: water_datas_of_year[water_datas_of_year.length - 1].date.slice(0, 4),
+            stationId: locations[index],
+            value: 0
           }
+          /* If theres a missmatch, then month is missing*/
+          if(water_data_of_location.stationId != locations[index]) water_datas_of_year.splice(index, 0, dummy_data)
+          /* If the location has a value of -9999 */
+          else if (water_data_of_location.value == -9999) water_datas_of_year.splice(index, 1, dummy_data)
         })
       });
       /* update state */
-      setList(array_of_datasets)
+      // console.log(store_array)
+      setList(store_array)
       // console.log(array_of_datasets)
     })
-  }, [])
+  }, [year_increment, month])
 
   /* create elements for intersection observer */
   useEffect(() => {
     const store_observables = []
-    for(let i = 1; i < NUMOFREQUESTS; i++) {
+    for(let i = 0; i < NUMOFREQUESTS; i++) {
       store_observables.push(
-        <div style={{display: "grid", placeItems: "center", alignContent: "center", minHeight: "100vh"}} key={i.toString()} id={i} className="Observable">{i}</div> 
+        <div style={{display: "grid", placeItems: "center", alignContent: "center", minHeight: "100vh"}} key={i.toString()} id={i} className="Observable" /> 
       )
     }
     setObservables(store_observables)
-  }, [start_year, year_increment])
+  }, [month, year_increment])
 
   /* set up intersection observer*/
   useEffect(() => {
@@ -95,13 +99,16 @@ function App() {
   */
   useEffect(() => {
     if(total_datasets.length <= current_dataset_index) return
-    setActual(total_datasets.slice(0, current_dataset_index))
+    setActual(total_datasets.slice(0, current_dataset_index + 1))
   }, [total_datasets, current_dataset_index])
 
   return (
     <div className="App">
       <span style={{position: "sticky", top: "0%", float: "left", width: "100%"}}>
         <Chart water_dataset={actual_datasets}/>
+        <EveryDecadeButton setIncrement={setIncrement}/>
+        <EveryFiveYearButton setIncrement={setIncrement} />
+        <MonthPicker setMonth={setMonth}/>
       </span> 
       
       {array_of_observables}
