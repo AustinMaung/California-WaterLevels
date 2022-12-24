@@ -104,11 +104,19 @@ function App() {
 
   return (
     <div className="App">
-      <span style={{position: "sticky", top: "0%", float: "left", width: "100%"}}>
-        <Chart water_dataset={actual_datasets}/>
-        <EveryDecadeButton setIncrement={setIncrement}/>
-        <EveryFiveYearButton setIncrement={setIncrement} />
-        <MonthPicker setMonth={setMonth}/>
+      <span style={{display: "flex", flexDirection: "column", alignItems: "center", position: "sticky", top: "0%", float: "left", width: "100%"}}>
+        <h1 style={{fontFamily: "Helvetica"}}>Water Levels in California Counties Over Time</h1>
+        <div style={{ width: "60%"}}>
+          <Chart water_dataset={actual_datasets}/>
+        </div>
+        
+        <div style={{display: "flex", flexDirection: "row", justifyContent: "center", width: "60%", height: "100%", padding: "10px"}}>
+          <div style={{marginRight: 10}}>
+            <EveryDecadeButton setIncrement={setIncrement}/>
+            <EveryFiveYearButton setIncrement={setIncrement} />
+          </div>
+          <MonthPicker setMonth={setMonth}/>
+        </div>
       </span> 
       
       {array_of_observables}

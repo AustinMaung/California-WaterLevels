@@ -14,9 +14,9 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  // Title,
   Tooltip,
-  Legend
+  // Legend
 );
 
 /* 
@@ -36,7 +36,7 @@ export function Chart(props) {
       return {
         label: water_datas_of_year[0].date.slice(0,4), /* label = year being looked at */
         data: water_datas_of_year.map((water_data_of_location) => water_data_of_location.value),
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: 'rgba(255, 99, 132, 0.8)',
       }
     })
   }
@@ -51,7 +51,9 @@ export function Chart(props) {
       title: {
         display: true,
         text: 'Water Levels of California Counties',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        
+        // backgroundColor: 'white',
+        // backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
     },
   };
