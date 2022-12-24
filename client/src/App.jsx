@@ -19,8 +19,8 @@ function App() {
 
   const [array_of_observables, setObservables] = useState([])
   
-   /* Gathers datasets based on a starting year and how many years to increment for */
-   useEffect(() => {
+  /* Gathers datasets based on a starting year and how many years to increment for */
+  useEffect(() => {
     async function callFetchRequests() {
       const store_datasets = []
       /* Make multiple post requests to get sets of data from CDEC API for each decade */
@@ -101,10 +101,23 @@ function App() {
     if(total_datasets.length <= current_dataset_index) return
     setActual(total_datasets.slice(0, current_dataset_index + 1))
   }, [total_datasets, current_dataset_index])
-
+  // style={{background: "orange", transition: "background 1s linear"}}
   return (
     <div className="App">
-      <span style={{display: "flex", flexDirection: "column", alignItems: "center", position: "sticky", top: "0%", float: "left", width: "100%"}}>
+      <style> 
+        {`
+          
+          .App {
+            background: orange;
+            transition: background 1s;
+          }
+          // .App:hover {
+          //   background: blue;
+          // }
+        `}
+        
+      </style>
+      <div style={{display: "flex", flexDirection: "column", alignItems: "center", position: "sticky", top: "0%", float: "left", width: "100%", height: "100%"}}>
         <h1 style={{fontFamily: "Helvetica"}}>Water Levels in California Counties Over Time</h1>
         <div style={{ width: "60%"}}>
           <Chart water_dataset={actual_datasets}/>
@@ -117,7 +130,7 @@ function App() {
           </div>
           <MonthPicker setMonth={setMonth}/>
         </div>
-      </span> 
+      </div> 
       
       {array_of_observables}
       
