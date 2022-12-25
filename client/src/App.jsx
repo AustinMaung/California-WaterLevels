@@ -34,12 +34,14 @@ function App() {
         const data = postRequest(api_call, year_month_locations)
         .catch(() => console.log("error"))
         store_datasets.push(data)
+        // console.log("gettig data")
       }
       /* Wait till all the async calls finish before returning stored datas */
       return await Promise.all(store_datasets)
     }
     callFetchRequests()
     .then((array_of_datasets)=>{
+      console.log("ayo")
       const store_array = array_of_datasets
       const locations = ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
       /* Go through each dataset, check if missing month or if incorrect value, then
@@ -63,6 +65,7 @@ function App() {
       });
       /* update state */
       // console.log(store_array)
+      // console.log("array", store_array)
       setList(store_array)
       // console.log(array_of_datasets)
     })
@@ -73,26 +76,38 @@ function App() {
     const store_observables = []
     for(let i = 0; i < NUMOFREQUESTS; i++) {
       store_observables.push(
-        <div style={{display: "grid", placeItems: "center", alignContent: "center", minHeight: "100vh"}} key={i.toString()} id={i} className="Observable" /> 
+        <div style={{display: "grid", placeItems: "center", alignContent: "center", minHeight: "80vh"}} key={i.toString()} id={i} className="Observable"></div> 
       )
     }
     setObservables(store_observables)
-  }, [month, year_increment])
+  }, [ year_increment])
 
-  /* set up intersection observer*/
+  /* set up intersection observer, resets every time observables change*/
+  const [observer, setObserver] = useState(null)
   useEffect(() => {
     if(array_of_observables.length <= 0) return
-    const observer = new IntersectionObserver((entries) => {
+    if(observer) observer.disconnect()
+    const new_observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if(!entry.isIntersecting) return
         setCurrent(parseInt(entry.target.id))
+        // console.log(((1 + parseInt(entry.target.id)) / NUMOFREQUESTS) * 100)
+        const percentage_of_screen = ((1 + parseInt(entry.target.id)) / NUMOFREQUESTS) * 100
+        console.log(percentage_of_screen)
+        const background_anim = document.querySelector(".background-top")
+        background_anim.style.height = `${percentage_of_screen}%`
       })
-    }, {root: null, rootMargin: "0px", threshold: 0.60})
+    }, {root: null, rootMargin: "0px", threshold: 0.6})
+    setObserver(new_observer)
+  }, [array_of_observables])
+  /* Connect observer to observables */
+  useEffect(() => {
+    if(!observer) return
     const html_observables = document.querySelectorAll(".Observable")
     html_observables.forEach((observable) => {
       observer.observe(observable)
     })
-  }, [array_of_observables])
+  }, [observer])
 
   /* set how many datasets to actually load depending on intersection observer.
      Observer sees how far webpage is scrolled down
@@ -104,20 +119,13 @@ function App() {
   // style={{background: "orange", transition: "background 1s linear"}}
   return (
     <div className="App">
-      <style> 
-        {`
-          
-          .App {
-            background: orange;
-            transition: background 1s;
-          }
-          // .App:hover {
-          //   background: blue;
-          // }
-        `}
-        
-      </style>
+      <div style={{position: "fixed", top: 0, width: "100%", height: "100%"}}>
+        <div className="background-top" style={{width: "100%", height: "0%",transistion: "height 1s", background: "orange"}}></div>
+        <div style={{width: "100%", height: "100%", background: "blue"}}></div>
+      </div>
+
       <div style={{display: "flex", flexDirection: "column", alignItems: "center", position: "sticky", top: "0%", float: "left", width: "100%", height: "100%"}}>
+      
         <h1 style={{fontFamily: "Helvetica"}}>Water Levels in California Counties Over Time</h1>
         <div style={{ width: "60%"}}>
           <Chart water_dataset={actual_datasets}/>
