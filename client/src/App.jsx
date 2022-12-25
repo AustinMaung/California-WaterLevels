@@ -21,7 +21,9 @@ function App() {
   
   /* Gathers datasets based on a starting year and how many years to increment for */
   useEffect(() => {
+    console.log("hello")
     async function callFetchRequests() {
+      console.log("world")
       const store_datasets = []
       /* Make multiple post requests to get sets of data from CDEC API for each decade */
       const api_call = new URL("http://localhost:3000/water-level-single")
@@ -32,16 +34,19 @@ function App() {
           locations: ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
         }
         const data = postRequest(api_call, year_month_locations)
-        .catch(() => console.log("error"))
+        .catch((error) => console.log(err))
+        console.log(data)
         store_datasets.push(data)
-        // console.log("gettig data")
       }
       /* Wait till all the async calls finish before returning stored datas */
-      return await Promise.all(store_datasets)
+      console.log(store_datasets)
+      return Promise.all(store_datasets)
+      // return store_datasets
     }
     callFetchRequests()
     .then((array_of_datasets)=>{
       console.log("ayo")
+      console.log(array_of_datasets)
       const store_array = array_of_datasets
       const locations = ["SHA", "ORO", "CLE", "NML", "SNL", "DNP", "BER"]
       /* Go through each dataset, check if missing month or if incorrect value, then
@@ -64,11 +69,9 @@ function App() {
         })
       });
       /* update state */
-      // console.log(store_array)
-      // console.log("array", store_array)
       setList(store_array)
-      // console.log(array_of_datasets)
     })
+    
   }, [year_increment, month])
 
   /* create elements for intersection observer */
@@ -76,7 +79,7 @@ function App() {
     const store_observables = []
     for(let i = 0; i < NUMOFREQUESTS; i++) {
       store_observables.push(
-        <div style={{display: "grid", placeItems: "center", alignContent: "center", minHeight: "80vh"}} key={i.toString()} id={i} className="Observable"></div> 
+        <div style={{display: "grid", placeItems: "center", alignContent: "center", minHeight: "100vh"}} key={i.toString()} id={i} className="Observable"></div> 
       )
     }
     setObservables(store_observables)
@@ -93,7 +96,7 @@ function App() {
         setCurrent(parseInt(entry.target.id))
         // console.log(((1 + parseInt(entry.target.id)) / NUMOFREQUESTS) * 100)
         const percentage_of_screen = ((1 + parseInt(entry.target.id)) / NUMOFREQUESTS) * 100
-        console.log(percentage_of_screen)
+        // console.log(percentage_of_screen)
         const background_anim = document.querySelector(".background-top")
         background_anim.style.height = `${percentage_of_screen}%`
       })

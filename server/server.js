@@ -25,10 +25,16 @@ app.post('/water-level-single', (req, res) => {
     const locations = req.body.locations.join()
     const api_call = `https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations=${locations}&SensorNums=15&dur_code=M&Start=${year}-${month}&End=${year}-${month}`
     console.log(api_call)
-    fetch(api_call)
-    .then((api_req) => api_req.json())
-    .then((result) => res.send(result))
-    .catch((err) => console.log(err))
+    function recursive() {
+        fetch(api_call)
+        .then((api_req) => api_req.json())
+        .then((result) => res.send(result))
+        .catch(() => {
+            console.log("recursive", api_call)
+            recursive()
+        })
+    }
+    recursive()
 })
 
 app.post('/water-level-multiple', (req, res) => {
