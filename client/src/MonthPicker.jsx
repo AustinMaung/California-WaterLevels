@@ -52,7 +52,7 @@ export function MonthPicker(props) {
         if(!showPicker) {
             element = <div></div>
         } else {
-            element = <div style={{position: "absolute", margin: 10, borderStyle: "solid", borderColor: "black"}}>
+            element = <div style={{position: "absolute", margin: 40, borderStyle: "solid", borderColor: "black"}}>
                 <Picker setMonth={props.setMonth}/></div>
         }
         
@@ -60,13 +60,9 @@ export function MonthPicker(props) {
     }, [showPicker])
 
     return(
-        <div id={"container"}>
+        <div style={{display: "flex", justifyContent: "center"}} id={"container"}>
             <button onClick={switchState} >change month</button>
             {picker}
-            
-            {/* <Picker setMonth={props.setMonth}/> */}
-            
-            
         </div>
     )
 }
