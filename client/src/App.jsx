@@ -21,9 +21,7 @@ function App() {
   
   /* Gathers datasets based on a starting year and how many years to increment for */
   useEffect(() => {
-    console.log("hello")
     async function callFetchRequests() {
-      console.log("world")
       const store_datasets = []
       /* Make multiple post requests to get sets of data from CDEC API for each decade */
       const api_call = new URL("http://localhost:3000/water-level-single")
