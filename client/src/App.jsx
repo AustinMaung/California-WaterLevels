@@ -6,6 +6,14 @@ import { MonthPicker } from './MonthPicker.jsx'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
 
+let api = ''
+
+if (window.location.hostname === 'localhost') {
+  api = 'http://localhost:3000'
+} else {
+  api = 'https://tiktok-battles-backend.onrender.com'
+}
+
 function App() {
   const [total_datasets, setList] = useState([])
   const [actual_datasets, setActual] = useState([])
@@ -24,7 +32,7 @@ function App() {
     async function callFetchRequests() {
       const store_datasets = []
       /* Make multiple post requests to get sets of data from CDEC API for each decade */
-      const api_call = new URL("http://localhost:3000/water-level-single")
+      const api_call = new URL(api+"/water-level-single")
       for(let i = 0; i < NUMOFREQUESTS; i++) {
         const year_month_locations = {
           year: start_year + (i * year_increment),

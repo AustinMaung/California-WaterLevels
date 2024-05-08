@@ -5,7 +5,7 @@ const app = express()
 
 /* Allow any api request to this server, ONLY FOR DEV */
 app.use(cors({
-    origin: '*'
+    origin: ['https://california-waterlevels.onrender.com', 'http://localhost:5173']
 }))
 
 /* Setup parser to allow POST requests */
