@@ -11,7 +11,7 @@ let api = ''
 if (window.location.hostname === 'localhost') {
   api = 'http://localhost:3000'
 } else {
-  api = 'https://tiktok-battles-backend.onrender.com'
+  api = 'https://california-water-levels-backend.onrender.com'
 }
 
 function App() {
