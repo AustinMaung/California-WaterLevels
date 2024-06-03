@@ -1,16 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 const button_style = {width: "50px", height: "30px", padding: 0, margin: 0, backgroundColor: "white"}
 function Picker(props) {
-    // const [currentMonth, setCurrentMonth] = useState(11)
-
     function handleMonth(month) {
         props.setMonth(month)
-        console.log(month)
     }
 
     function handleOnClick(e) {
-        // console.log()
-        // handleMonth(parseInt(e.target.id))
         props.setMonth(parseInt(e.target.id))
     }
     
@@ -40,29 +35,35 @@ function Picker(props) {
 }
 
 export function MonthPicker(props) {
-    const [showPicker, setShow] = useState(false)
-    const [picker, setPicker] = useState()
+    const [showPicker, setShowPicker] = useState(false);
+    const buttonRef = useRef(null);
 
-    function switchState() {
-        setShow(showPicker => !showPicker)
-    }
-    /*  */
     useEffect(() => {
-        let element = <div>test</div>
-        if(!showPicker) {
-            element = <div></div>
-        } else {
-            element = <div style={{position: "absolute", margin: 40, borderStyle: "solid", borderColor: "black"}}>
-                <Picker setMonth={props.setMonth}/></div>
-        }
-        
-        setPicker(element)
-    }, [showPicker])
+        const handleClickOutside = (event) => {
+            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+                setShowPicker(false);
+            }
+        };
 
-    return(
-        <div style={{display: "flex", justifyContent: "center"}} id={"container"}>
-            <button onClick={switchState} >change month</button>
-            {picker}
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
+    const togglePicker = () => {
+        setShowPicker(prevState => !prevState);
+    };
+
+    return (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+            <button ref={buttonRef} onClick={togglePicker}>Change Month</button>
+            {showPicker && (
+                <div style={{ position: "absolute", margin: 40, borderStyle: "solid", borderColor: "black" }}>
+                    <Picker setMonth={props.setMonth} />
+                </div>
+            )}
         </div>
-    )
+    );
 }

@@ -100,11 +100,6 @@ function App() {
       entries.forEach((entry) => {
         if(!entry.isIntersecting) return
         setCurrent(parseInt(entry.target.id))
-        // console.log(((1 + parseInt(entry.target.id)) / NUMOFREQUESTS) * 100)
-        const percentage_of_screen = ((1 + parseInt(entry.target.id)) / NUMOFREQUESTS) * 100
-        // console.log(percentage_of_screen)
-        const background_anim = document.querySelector(".background-top")
-        background_anim.style.height = `${percentage_of_screen}%`
       })
     }, {root: null, rootMargin: "0px", threshold: 0.6})
     setObserver(new_observer)
@@ -125,12 +120,12 @@ function App() {
     if(total_datasets.length <= current_dataset_index) return
     setActual(total_datasets.slice(0, current_dataset_index + 1))
   }, [total_datasets, current_dataset_index])
-  // style={{background: "orange", transition: "background 1s linear"}}
+  
   return (
     <div className="App">
       <div style={{position: "fixed", top: 0, width: "100%", height: "100%"}}>
-        <div className="background-top" style={{width: "100%", height: "0%",transistion: "height 1s", background: "orange"}}></div>
-        <div style={{width: "100%", height: "100%", background: "blue"}}></div>
+        {/*<div className="background-top" style={{width: "100%", height: "0%",transistion: "height 1s", background: "orange"}}></div>
+        <div style={{width: "100%", height: "100%", background: "blue"}}></div>*/}
       </div>
 
       <div style={{display: "flex", flexDirection: "column", alignItems: "center", position: "sticky", top: "0%", float: "left", width: "100%", height: "100%"}}>
